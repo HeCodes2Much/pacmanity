@@ -10,21 +10,27 @@
 
 # Keeps a list of installed packages in a Gist at your GitHub account.
 
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root/sudo"
+  exit
+fi
+
 echo "A list of installed packages will be automatically maintained"
 echo "by Pacmanity in a private Gist at your GitHub account."
 
 echo -e "\n- Step 1: Log in to Gist using your GitHub account:"
 [[ -f ~/.gist ]] || gist --login
+[[ -f /etc/pacmanity ]] || touch /etc/pacmanity
 mkdir -p $pkgdir/root
 cp -v ~/.gist $pkgdir/root/.gist
 
 echo -e "\n- Step 2: Save list of currently installed packages to Gist:"
 GIST_URL=$(
     (
-        pacman -Qqen
+        pacman -Qqn
         echo
-        pacman -Qqem
-    ) | gist -p -f $HOSTNAME.pacmanity -d "$HOSTNAME: List of installed packages"
+        pacman -Qqm
+    ) | gist -f $HOSTNAME.pacmanity -d "$HOSTNAME: List of installed packages"
 )
 
 echo "GIST_ID=$GIST_URL" | sed 's/https:\/\/gist.github.com\///g' >> $pkgdir/etc/pacmanity
