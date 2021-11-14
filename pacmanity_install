@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+#------------------------------------------------------------------------------
+# Path         - /usr/bin/pacmanity_install
+# GitHub       - https://github.com/The-Repo-Club/
+# Author       - The-Repo-Club [wayne6324@gmail.com]
+# Start On     - Sun 14 Nov 11:04:24 GMT 2021
+# Modified On  - Sun 14 Nov 11:04:24 GMT 2021
+#------------------------------------------------------------------------------
+
+# Keeps a list of installed packages in a Gist at your GitHub account.
+
+echo "A list of installed packages will be automatically maintained"
+echo "by Pacmanity in a private Gist at your GitHub account."
+
+echo -e "\n- Step 1: Log in to Gist using your GitHub account:"
+[[ -f ~/.gist ]] || gist --login
+mkdir -p $pkgdir/root
+cp -v ~/.gist $pkgdir/root/.gist
+
+echo -e "\n- Step 2: Save list of currently installed packages to Gist:"
+GIST_URL=$(
+    (
+        pacman -Qqen
+        echo
+        pacman -Qqem
+    ) | gist -p -f $HOSTNAME.pacmanity -d "$HOSTNAME: List of installed packages"
+)
+
+echo "GIST_ID=$GIST_URL" | sed 's/https:\/\/gist.github.com\///g' >> $pkgdir/etc/pacmanity
+
+echo "An automatically mantained list of installed packages"
+echo "has been successfully created in your GitHub Gist."
+echo "Visit https://gist.github.com or the direct link below:"
+echo "$GIST_URL"

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+#------------------------------------------------------------------------------
+# Path         - /usr/bin/pacmanity_update
+# GitHub       - https://github.com/The-Repo-Club/
+# Author       - The-Repo-Club [wayne6324@gmail.com]
+# Start On     - Sun 14 Nov 11:06:56 GMT 2021
+# Modified On  - Sun 14 Nov 11:06:56 GMT 2021
+#------------------------------------------------------------------------------
+
+# Keeps a list of installed packages in a Gist at your GitHub account.
+
+pacmanity_update(){
+    if (pacman -Qqn; echo; pacman -Qqm) | gist -u "$GIST_ID" -f $HOSTNAME.pacmanity; then
+        (pacman -Qn; echo; pacman -Qm) | gist -u "$GIST_ID" -f $HOSTNAME.version.pacmanity
+        echo "Pacmanity: Gist successfully updated."
+    else
+        echo "Pacmanity: ERROR! Try running"
+        echo "sudo gist --login"
+    fi
+}
+
+# Add Ruby to PATH
+PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+
+# Load config
+[[ -r '/etc/pacmanity' ]] && source $pkgdir/etc/pacmanity
+
+# Determine if fresh install is needed
+if [ -z "$GIST_ID" ]; then
+    echo "Info: Gist is not set up for Pacmanity."
+    echo "Reinstalling Pacmanity can solve this issue."
+else
+    pacmanity_update
+fi

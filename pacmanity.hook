@@ -1,4 +1,11 @@
-# Pacmanity
+#------------------------------------------------------------------------------
+# Path         - /usr/bin/pacmanity.hook#
+# GitHub       - https://github.com/The-Repo-Club/
+# # Author       - The-Repo-Club [wayne6324@gmail.com]
+# # Start On     - Sun 14 Nov 11:08:02 GMT 2021#
+# Modified On  - Sun 14 Nov 11:08:02 GMT 2021#
+#------------------------------------------------------------------------------#
+#
 # Keeps a list of installed packages in a Gist at your GitHub account.
 
 [Trigger]
@@ -12,4 +19,4 @@ Target = *
 Description = Running Pacmanity hook...
 Depends = coreutils
 When = PostTransaction
-Exec = /usr/lib/pacmanity/pacmanity.sh
+Exec = /usr/lib/pacmanity/pacmanity_update
